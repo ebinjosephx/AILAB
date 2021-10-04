@@ -1,0 +1,24 @@
+# Load Data set
+from sklearn.datasets import load_iris
+iris=load_iris()
+x=iris.data
+y=iris.target
+#Cross validation
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=42)
+from tensorflow import keras
+#DNN layers construction
+model_DNN =keras.models.Sequential()
+#Input and Hidden layers creation
+model_DNN.add(keras.layers.Dense(units=12, activation= 'relu',input_shape=x_train.shape[1:]))
+model_DNN.add(keras.layers.Dense(units=10, activation='relu' ))
+model_DNN.add(keras.layers.Dense(units=8, activation='relu' ))
+model_DNN.add(keras.layers.Dense(units=6, activation='relu'))
+model_DNN.add(keras.layers.Dense(units=3, activation='sigmoid' ))
+model_DNN.summary()
+#Compile and fit
+model_DNN.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model_DNN.fit(x_train,y_train,epochs=5,batch_size=16)
+testloss,testaccuracy=model_DNN.evaluate(x_test,y_test)
+print ('The test loss is',testloss)
+print('The test accuracy is',testaccuracy)
