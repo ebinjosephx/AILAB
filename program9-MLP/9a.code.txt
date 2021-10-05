@@ -1,0 +1,18 @@
+from sklearn.datasets import load_boston
+boston=load_boston()
+x=boston.data
+y=boston.target
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.7,random_state=42)
+
+from tensorflow import keras
+reg=keras.models.Sequential()
+reg.add(keras.layers.Dense(units=2,activation='relu',input_shape=x.shape[1:]))
+reg.add(keras.layers.Dense(units=2,activation='linear'))
+reg.summary()
+reg.compile(loss='mse',optimizer='adam',metrics='mse')
+reg.fit(x_train,y_train,validation_split=0.1,epochs=3,batch_size=16)
+test_loss,test_accuracy=reg.evaluate(x_test,y_test)
+print(test_loss)
+print(test_accuracy)

@@ -1,0 +1,20 @@
+from sklearn.datasets import load_iris 
+from tensorflow import keras 
+irisData = load_iris() 
+X = irisData.data 
+y = irisData.target 
+ 
+from sklearn.model_selection import train_test_split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
+random_state=42) 
+ 
+model_MLP = keras.models.Sequential()
+model_MLP.add(keras.layers.Dense(units=15, activation='relu', 
+input_shape= X_train.shape[1:])) 
+model_MLP.add(keras.layers.Dense(units=3, activation='softmax')) 
+model_MLP.summary() 
+model_MLP.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy']) 
+model_MLP.fit(x=X_train, y=y_train, epochs=3, batch_size=16) 
+test_loss, test_accuracy = model_MLP.evaluate(x=X_test, y=y_test) 
+print("test loss = ",test_loss) 
+print("test accuracy = ", test_accuracy) 
