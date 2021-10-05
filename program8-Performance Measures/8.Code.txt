@@ -1,0 +1,63 @@
+from sklearn.datasets import load_iris
+iris=load_iris()
+x=iris.data[50:150,2:]
+y=iris.target.reshape(150,1)
+y_new=y[50:150,:]
+y_new=y_new.ravel()
+from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import SGDClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import *
+from sklearn.metrics import *
+import matplotlib.pyplot as plt
+model=Pipeline([('scaler',StandardScaler()),('linearsvm',LinearSVC(C=2,loss='hinge',max_iter=260))])
+accuracy_score=cross_val_score(model,x,y_new,cv=3,scoring='accuracy')
+y_pred=cross_val_predict(model,x,y_new,cv=3)
+y_pred_score=cross_val_predict(model,x,y_new,cv=3,method='decision_function')
+confusionmatrix=confusion_matrix(y_new,y_pred)
+recall=recall_score(y_new,y_pred)
+precision=precision_score(y_new,y_pred)
+fpr,tpr,th=roc_curve(y_new,y_pred_score,pos_label=2)
+plt.plot(fpr,tpr,linewidth=2,label='None')
+print('SVM')
+print(confusionmatrix)
+print(accuracy_score)
+print(precision_score)
+print(recall_score)
+
+model=SGDClassifier()
+accuracy_score=cross_val_score(model,x,y_new,cv=3,scoring='accuracy')
+y_pred=cross_val_predict(model,x,y_new,cv=3)
+y_pred_score=cross_val_predict(model,x,y_new,cv=3,method='decision_function')
+confusionmatrix=confusion_matrix(y_new,y_pred)
+recall=recall_score(y_new,y_pred)
+precision=precision_score(y_new,y_pred)
+fpr,tpr,th=roc_curve(y_new,y_pred_score,pos_label=2)
+plt.plot(fpr,tpr,linewidth=2,label='None')
+print('SGDClassifier')
+print(confusionmatrix)
+print(accuracy_score)
+print(precision_score)
+print(recall_score)
+
+model=LogisticRegression()
+accuracy_score=cross_val_score(model,x,y_new,cv=3,scoring='accuracy')
+y_pred=cross_val_predict(model,x,y_new,cv=3)
+y_pred_score=cross_val_predict(model,x,y_new,cv=3,method='decision_function')
+confusionmatrix=confusion_matrix(y_new,y_pred)
+recall=recall_score(y_new,y_pred)
+precision=precision_score(y_new,y_pred)
+fpr,tpr,th=roc_curve(y_new,y_pred_score,pos_label=2)
+plt.plot(fpr,tpr,linewidth=2,label='None')
+print('Logistic Regression')
+print(confusionmatrix)
+print(accuracy_score)
+print(precision_score)
+print(recall_score)
+
+plt.xlabel("FPR")
+plt.ylabel("TPR")
+plt.title("ROC curve")
+plt.legend(["Linear SVM","SGDClassifier","Logistic Regression"])
